@@ -7,7 +7,7 @@ function bit_seq = GenerateBits(N_bits)
 %
 % This function generates a sequence of bits with length equal to N_bits
 
-bit_seq = zeros(1,N_bits);
+%bit_seq = zeros(1,N_bits);
 %%% WRITE YOUR CODE HERE
-
+bit_seq = randi([0,1],1,N_bits);
 %%%

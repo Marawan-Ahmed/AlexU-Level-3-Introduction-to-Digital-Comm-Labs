@@ -40,7 +40,9 @@ for p_ind = 1:length(p_vect)
     BER_case_1_vec(p_ind) = ComputeBER(bit_seq,rec_bit_seq);
 end
 
-plot(p_vect, BER_case_1_vec), xlabel('P'), ylabel('BER'), title('BER versus different values of the channelparameter p'),
+x = [0:0.01:10];
+y = sin(x);
+plot(x, y), xlabel('x'), ylabel('Sin(x)'), title('Sin(x) Graph'),
 grid on, axis equal
 %%%
 

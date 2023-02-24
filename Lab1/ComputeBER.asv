@@ -11,12 +11,9 @@ function BER = ComputeBER(bit_seq,rec_bit_seq)
 
 %%% WRITE YOUR CODE HERE
 number_error_bits = 0;
-number_bits = length(bit_seq);
+number_bits = :length(numlist)
 
-for i = 1:number_bits
-    if (bit_seq(i) ~= rec_bit_seq(i))
-        number_error_bits = number_error_bits + 1;
-    end
+for k1 = 1:length(numlist)
+    fprintf('Number at position %d = %6.2f\n', k1, numlist{k1})
 end
-BER = number_error_bits / number_bits;
 %%%

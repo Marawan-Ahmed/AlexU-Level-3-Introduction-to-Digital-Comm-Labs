@@ -29,10 +29,7 @@ switch case_type
         for i = 1:number_bits
             temp = 0;
             for j = 1:fs
-               temp = temp + rec_sample_seq((i-1)*fs+j);
-            end
-            if temp >= fs/2
-                rec_bit_seq(i) = 1;
+               temp = temp + sample_seq((i-1)*fs+1:(i*fs));
             end
         end
         %%%
