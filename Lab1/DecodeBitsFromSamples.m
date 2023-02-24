@@ -85,7 +85,7 @@ switch case_type
                 
                 % calculate the prob. of one in the current redundancy
                 % block to be used in error correction (
-                prob_of_one = prob_of_one + (1/number_of_copies);
+                prob_of_one = prob_of_one + (1/number_copies);
             end
 
             %%% correct errors by comparing the redundant bits:
@@ -98,16 +98,27 @@ switch case_type
                 
                 if(prob_of_one >= 0.5)
                     
-                    % correct the previous copies
+                    % correct the previous copies to be "1"
                     while(copy_index >= 1)
                         
-                        rec_sample_seq(i - (copy_index-1))= 1;
+                        rec_bit_seq(i - (copy_index-1))= 1;
                         copy_index = copy_index - 1;
                     end
                     
                     % reset the prob_of_one for the next redundancy block
                     prob_of_one = 0;
+                end
+                
+                if(prob_of_one < 0.5)
+                    % correct the previous copies to be "0"
+                    while(copy_index >= 1)
+           
+                        rec_bit_seq(i - (copy_index-1))= 0;
+                        copy_index = copy_index - 1;
+                    end
                     
+                    % reset the prob_of_one for the next redundancy block
+                    prob_of_one = 0;
                 end
             end
         end

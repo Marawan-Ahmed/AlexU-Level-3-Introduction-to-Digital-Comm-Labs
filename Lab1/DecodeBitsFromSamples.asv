@@ -62,7 +62,10 @@ switch case_type
         % identified ones in the fs-long sequence must be greater than 
         % the number of zeros. Part_3, differs from part_1 as it adds an
         % extra error correction technique usimg redudancy blocks. To send 
-        % a "1" the transmitter sends a number of copies of the "1", f 
+        % a "1" the transmitter sends a number of copies of the "1", 5 
+        % copies for instance, and the receiver identifies the received
+        % block as a "1" only if the probability of "1" in the redundancy
+        % block is greater than the probability of "0".
         %%%
    
         for i = 1:number_bits
@@ -82,7 +85,7 @@ switch case_type
                 
                 % calculate the prob. of one in the current redundancy
                 % block to be used in error correction (
-                prob_of_one = prob_of_one + (1/number_of_copies);
+                prob_of_one = prob_of_one + (1/number_copies);
             end
 
             %%% correct errors by comparing the redundant bits:
@@ -92,13 +95,14 @@ switch case_type
             % thus, the bits are corrected to be "11111"
 
             if(copy_index == number_copies)
-                
+                disp("inside error correction block");
+                disp(prob_of_one);
                 if(prob_of_one >= 0.5)
-                    
+                    disp("inside '1' block");
                     % correct the previous copies
                     while(copy_index >= 1)
-                        
-                        rec_sample_seq(i - (copy_index-1))= 1;
+                        disp(rec_bit_seq);
+                        rec_bit_seq(i - (copy_index-1))= 1;
                         copy_index = copy_index - 1;
                     end
                     
@@ -106,9 +110,14 @@ switch case_type
                     prob_of_one = 0;
                     
                 end
+                
+                if(prob_of_one<
+                    
+                end
             end
         end
     end
-        
+    
         %%%
+    disp(rec_bit_seq);
 end
