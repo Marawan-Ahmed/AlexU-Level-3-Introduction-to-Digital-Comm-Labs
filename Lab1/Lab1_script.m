@@ -39,8 +39,8 @@ for p_ind = 1:length(p_vect)
     rec_bit_seq = DecodeBitsFromSamples(rec_sample_seq,'part_1');
     BER_case_1_vec(p_ind) = ComputeBER(bit_seq,rec_bit_seq);
 end
-
-plot(p_vect, BER_case_1_vec), xlabel('P'), ylabel('BER'), title('BER versus different values of the channelparameter p'),
+figure
+plot(p_vect, BER_case_1_vec), xlabel('P'), ylabel('BER'), title('Part1: BER versus different values of the channelparameter p'),
 grid on, axis equal
 %%%
 
@@ -77,9 +77,15 @@ for p_ind = 1:length(p_vect)
     rec_bit_seq = DecodeBitsFromSamples(rec_sample_seq,'part_2',fs);
     BER_case_2_vec(p_ind) = ComputeBER(bit_seq,rec_bit_seq);
 end
+figure
+plot(p_vect, BER_case_2_vec), xlabel('P'), ylabel('BER'), title('Part2: BER versus different values of the channel parameter p'),
+grid on, axis equal
 %%%
 
 %% Part 3: BER for simple bit-flipping channel with multiple samples and correlated channel
+
+% System parameters
+fs  = 10;    % Number of samples per symbol (bit)
 
 % Generate a bit sequence
 bit_seq = GenerateBits(N_bits); % Generate a sequence of bits equal to the total number of bits
@@ -112,15 +118,17 @@ end
 %%%
 
 % Plotting results
-
 figure
-plot(p_vect,BER_case_1_vec,'x-k','linewidth',2); hold on;
-plot(p_vect,BER_case_2_vec,'o-r','linewidth',2); hold on;
-plot(p_vect,BER_case_3_vec,'d-b','linewidth',2); hold on;
+plot(p_vect, BER_case_3_vec), xlabel('P'), ylabel('BER'), title('Part3: BER versus different values of the channel parameter p'),
+grid on, axis equal
+%figure
+%plot(p_vect,BER_case_1_vec,'x-k','linewidth',2); hold on;
+%plot(p_vect,BER_case_2_vec,'o-r','linewidth',2); hold on;
+%plot(p_vect,BER_case_3_vec,'d-b','linewidth',2); hold on;
 
-xlabel('Values of p','fontsize',10)
-ylabel('BER','fontsize',10)
-legend('Part 1-a','Part 2-a','Part 3-a','fontsize',10)
+%xlabel('Values of p','fontsize',10)
+%ylabel('BER','fontsize',10)
+%legend('Part 1-a','Part 2-a','Part 3-a','fontsize',10)
 %% Part 4: Effect of number of repetitions on BER
 % GOAL: Make a plot for the BER versus the number of repetitions used in
 % the transmitter of part 2
@@ -129,3 +137,19 @@ legend('Part 1-a','Part 2-a','Part 3-a','fontsize',10)
 
 
 %%% WRITE YOUR CODE HERE
+fs_vect          = int32(1):1:int32(50);              % Use this vector to extract different values of fs in your code
+BER_case_2_vec_fs  = zeros(size(fs_vect));  % Use this vector to store the resultant BER
+p =0.3;
+% Generate a bit sequence
+bit_seq = GenerateBits(N_bits); % Generate a sequence of bits equal to the total number of bits
+
+%%% WRITE YOUR CODE HERE [DONE]
+for fs_ind = 1:length(fs_vect)
+    sample_seq = GenerateSamples(bit_seq,fs_vect(fs_ind)); % IMPLEMENT THIS [DONE]: Generate a sequence of samples for each bit
+    rec_sample_seq = BSC(sample_seq,fs_vect(fs_ind),p);
+    rec_bit_seq = DecodeBitsFromSamples(rec_sample_seq,'part_2',fs_vect(fs_ind));
+    BER_case_2_vec_fs(fs_ind) = ComputeBER(bit_seq,rec_bit_seq);
+end
+figure
+plot(fs_vect, BER_case_2_vec_fs), xlabel('fs'), ylabel('BER'), title('Part4: BER versus different values of the number of repetitions'),
+grid on
