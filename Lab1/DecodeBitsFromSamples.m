@@ -49,6 +49,13 @@ switch case_type
                 rec_bit_seq(i) = 1;
             end
         end
+        %%%
+end
+
+
+
+
+
 %         % number of received bits
 %         number_bits = length(rec_sample_seq)/fs; 
 %         
@@ -125,6 +132,3 @@ switch case_type
 %             end
 %         end
 %     end
-    
-        %%%
-end

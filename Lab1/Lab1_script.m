@@ -122,13 +122,15 @@ figure
 plot(p_vect, BER_case_3_vec), xlabel('P'), ylabel('BER'), title('Part3: BER versus different values of the channel parameter p'),
 grid on, axis equal
 %figure
-%plot(p_vect,BER_case_1_vec,'x-k','linewidth',2); hold on;
-%plot(p_vect,BER_case_2_vec,'o-r','linewidth',2); hold on;
-%plot(p_vect,BER_case_3_vec,'d-b','linewidth',2); hold on;
+plot(p_vect,BER_case_1_vec,'x-k','linewidth',2), title('Plots from all three parts'),
+grid on, axis equal;
+hold on;
+plot(p_vect,BER_case_2_vec,'o-r','linewidth',2); hold on;
+plot(p_vect,BER_case_3_vec,'d-b','linewidth',2); hold on;
 
-%xlabel('Values of p','fontsize',10)
-%ylabel('BER','fontsize',10)
-%legend('Part 1-a','Part 2-a','Part 3-a','fontsize',10)
+xlabel('Values of p','fontsize',10)
+ylabel('BER','fontsize',10)
+legend('Part 1-a','Part 2-a','Part 3-a','fontsize',10)
 %% Part 4: Effect of number of repetitions on BER
 % GOAL: Make a plot for the BER versus the number of repetitions used in
 % the transmitter of part 2
