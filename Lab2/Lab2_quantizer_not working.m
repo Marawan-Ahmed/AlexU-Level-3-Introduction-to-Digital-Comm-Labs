@@ -20,7 +20,8 @@ filtered_signal = filter(B,A,zero_added_signal);
 
 % Quantize the filtered signal to 8 bits
 bits = 8;
-quantized_signal = quantize(filtered_signal, linspace(-2, 2, 2^bits));
+q = quantizer('fixed','floor','wrap',[6 2]);
+quantized_signal = quantize(q,filtered_signal);
 
 plot(t, quantized_signal,'r' )
 title(sprintf('Quantized signal (%d bits)', bits));
