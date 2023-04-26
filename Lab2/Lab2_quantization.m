@@ -1,7 +1,7 @@
 clear
 clc
 
-%uniform quantization
+%%uniform quantization
 % reconstruction from oversampling
 t=0:(1/4000)*1:1;% time signal
 x = cos(2*pi*2*t);
@@ -28,7 +28,7 @@ end
 figure
 plot(numlist, error,'r' )
 
-%non unifrom quantization (mu law)
+%%non unifrom quantization (mu law)
 % reconstruction from oversampling
 t=0:(1/4000)*1:1;% time signal
 x = cos(2*pi*2*t);
