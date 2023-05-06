@@ -32,11 +32,12 @@ plot(numlist, error,'r' )
 % reconstruction from oversampling
 t=0:(1/4000)*1:1;% time signal
 x = cos(2*pi*2*t);
+x = ((log(1+255*abs(x)))/(log(1+255))).*sign(x);
 numlist = [3,4,5,10];
 y = zeros(length(numlist),length(t));
 
 for i = 1:length(numlist)
-    y(i,:) = double(fi(compand(x,255,max(x),'mu/compressor'),1,2*numlist(i)+1,numlist(i)));
+    y(i,:) = double(fi(x,1,2*numlist(i)+1,numlist(i)));
     figure
     plot(t, y(i,:),'r' )
     hold on;
