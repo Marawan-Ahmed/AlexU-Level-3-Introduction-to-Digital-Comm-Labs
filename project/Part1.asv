@@ -25,13 +25,12 @@ for i = 1:length(data)
 end
 
 % Apply noise to samples
-signal_power = mean(data.^2);
+signal_power = sum(waveform.^2)/n;
 for i = 1:length(SNR)
-%     noise_power = (signal_power/(10^(SNR(i)/10)));
-%     noise_signal = sqrt(noise_power) * randn(size(waveform));
-%     Rx_signal = waveform + noise_signal;
-    %     Rx_signal = waveform + noise_signal;
-
+    noise_power = signal_power/(10^(SNR(i)/10));
+    noise_signal = sqrt(noise_power) * randn(size(waveform));
+    Rx_signal = waveform + noise_signal;
+    
     % Decide whether the Rx_sequence is '1' or '0' by comparing the samples with threshold
     simple_Rx = simple_receiver(Rx_signal,m,mean(Rx_signal),T-1);
     % Perform convolution process in the receiver
@@ -45,14 +44,15 @@ for i = 1:length(SNR)
     BER_simple_Rx(i) = ComputeBER(data,simple_Rx);
     BER_mf(i) = ComputeBER(data,mf_Rx);
     BER_collerator(i) = ComputeBER(data,collerator_Rx);
+
 end
 
 % Plot the BER curve against SNR (use semilogy)
 semilogy(SNR,BER_simple_Rx,'-o')
 xlabel('Signal-to-Noise Ratio (dB)')
 ylabel('Bit Error Rate')
-xlim([0 SNR(end)])
-ylim([0 0.5])
+% xlim([0 SNR(end)])
+% ylim([0 0.5])
 title('Matched filter vs. simple Rx')
 hold on
 
@@ -64,8 +64,8 @@ figure;
 semilogy(SNR,BER_simple_Rx,'-o')
 xlabel('Signal-to-Noise Ratio (dB)')
 ylabel('Bit Error Rate')
-xlim([0 SNR(end)])
-ylim([0 0.5])
+% xlim([0 SNR(end)])
+% ylim([0 0.5])
 title('Collerator vs. simple Rx')
 hold on
 

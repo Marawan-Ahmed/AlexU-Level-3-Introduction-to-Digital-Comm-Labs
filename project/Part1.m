@@ -25,8 +25,9 @@ for i = 1:length(data)
 end
 
 % Apply noise to samples
+signal_power = sum(waveform.^2)/n;
 for i = 1:length(SNR)
-    noise_power = sum(data.^2)/10^(SNR(i)/10)/m;
+    noise_power = signal_power/(10^(SNR(i)/10));
     noise_signal = sqrt(noise_power) * randn(size(waveform));
     Rx_signal = waveform + noise_signal;
     
