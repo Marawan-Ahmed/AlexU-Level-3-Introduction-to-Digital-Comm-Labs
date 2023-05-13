@@ -9,7 +9,7 @@ waveform_nrzi = nrzi_modulation(bits);
 waveform_rz = rz_modulation(bits);
 waveform_ami = ami_modulation(bits);
 waveform_manchester = manchester_modulation(bits);
-%waveform_mlt3 = mlt3_modulation(bits);
+waveform_mlt3 = mlt3_modulation(bits);
 
 
 % Plot the line code modulations
@@ -55,11 +55,11 @@ xlabel('Time');
 ylabel('Voltage');
 title('Manchester Modulation');
 
-%subplot(6, 1, 6);
-%plot(time, waveform_mlt3);
-%xlabel('Time');
-%ylabel('Voltage');
-%title('MLT-3 Modulation');
+subplot(6, 1, 6);
+plot(time, waveform_mlt3);
+xlabel('Time');
+ylabel('Voltage');
+title('MLT-3 Modulation');
 
 
 %axis off;
@@ -70,6 +70,26 @@ title('Manchester Modulation');
 %subplot_position(4) = subplot_position(4) - subplot_spacing;
 %set(gcf, 'Position', subplot_position);
 
+Ts = length(time) / num_bits ;
+
+% Calculate power spectral density
+[P_nrz, f_nrz] = periodogram(waveform_nrz,[],[],1/Ts,'centered');
+[P_nrzi, f_nrzi] = periodogram(waveform_nrzi,[],[],1/Ts,'centered');
+[P_rz, f_rz] = periodogram(waveform_rz,[],[],1/Ts,'centered');
+[P_ami, f_ami] = periodogram(waveform_ami,[],[],1/Ts,'centered');
+[P_manchester, f_manchester] = periodogram(waveform_manchester,[],[],1/Ts,'centered');
+[P_mlt3, f_mlt3] = periodogram(waveform_mlt3,[],[],1/Ts,'centered');
+
+% Plot power spectral density
+figure;
+subplot(6,1,1); plot(f_nrz,10*log10(P_nrz)); title('Non-return to zero');
+subplot(6,1,2); plot(f_nrzi,10*log10(P_nrzi)); title('Non-return to zero inverted');
+subplot(6,1,3); plot(f_rz,10*log10(P_rz)); title('Return to zero');
+subplot(6,1,4); plot(f_ami,10*log10(P_ami)); title('Alternate mark inversion');
+subplot(6,1,5); plot(f_manchester,10*log10(P_manchester)); title('Manchester coding');
+subplot(6,1,6); plot(f_mlt3,10*log10(P_mlt3)); title('Multi-level transmission3');
+xlabel('Frequency (Hz)');
+ylabel('Power spectral density (dB/Hz)');
 
 % Function to generate random bits
 function bits = generate_random_bits(num_bits)
@@ -123,14 +143,16 @@ end
 
 % Function for Multilevel Transmission 3 (MLT-3) modulation
 function waveform = mlt3_modulation(bits)
-    waveform = zeros(1, length(bits) * 2)';
-    current_level = 1;
+    waveform = zeros(1, length(bits));
+    level = 1;  % Initial level
     for i = 1:length(bits)
         if bits(i) == 0
-            waveform(2*i-1:2*i) = waveform(2*i-2);
+            waveform(i) = level;  % No transition, maintain current level
         else
-            waveform(2*i-1:2*i) = -waveform(2*i-2) * current_level;
-            current_level = -current_level;
+            level = -level;  % Transition, change level
+            waveform(i) = level;
         end
     end
 end
+
+
