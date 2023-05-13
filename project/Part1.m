@@ -2,7 +2,7 @@ close all;
 clear;
 
 % Simulation parameters
-n = 1e4; % number of bits (need to be changed before submit to 1e5)
+n = 1e4; % number of bits 
 SNR = 0:2:30; % signal-to-noise ratio range (in dB)
 m = 20; % number of samples that represents waveform
 T = 20; % sampling instant
@@ -25,17 +25,17 @@ for i = 1:length(data)
 end
 
 % Apply noise to samples
+signal_power = mean(data.^2);
 for i = 1:length(SNR)
-    noise_power = sum(data.^2)/10^(SNR(i)/10);
-    noise_signal = sqrt(noise_power) * randn(size(waveform));
-    Rx_signal = waveform + noise_signal;
-%     Rx_signal = waveform;
-    
+%     noise_power = (signal_power/(10^(SNR(i)/10)));
+%     noise_signal = sqrt(noise_power) * randn(size(waveform));
+%     Rx_signal = waveform + noise_signal;
+    Rx_signal = awgn(waveform, SNR(i));
+
     % Decide whether the Rx_sequence is '1' or '0' by comparing the samples with threshold
     simple_Rx = simple_receiver(Rx_signal,m,mean(Rx_signal),T-1);
     % Perform convolution process in the receiver
     y = filter(matched_filter,1,Rx_signal);
-%     y = conv(Rx_signal,matched_filter(end:-1:1));
 
     % Sample the output of the matched filter;
     mf_Rx = simple_receiver(y,m,mean(y),T-1);
@@ -45,15 +45,14 @@ for i = 1:length(SNR)
     BER_simple_Rx(i) = ComputeBER(data,simple_Rx);
     BER_mf(i) = ComputeBER(data,mf_Rx);
     BER_collerator(i) = ComputeBER(data,collerator_Rx);
-
 end
 
 % Plot the BER curve against SNR (use semilogy)
 semilogy(SNR,BER_simple_Rx,'-o')
-xlim([0 SNR(end)])
-ylim([0 0.5])
 xlabel('Signal-to-Noise Ratio (dB)')
 ylabel('Bit Error Rate')
+xlim([0 SNR(end)])
+ylim([0 0.5])
 title('Matched filter vs. simple Rx')
 hold on
 
@@ -63,10 +62,10 @@ hold off
 figure;
 % Plot the BER curve against SNR (use semilogy)
 semilogy(SNR,BER_simple_Rx,'-o')
-xlim([0 SNR(end)])
-ylim([0 0.5])
 xlabel('Signal-to-Noise Ratio (dB)')
 ylabel('Bit Error Rate')
+xlim([0 SNR(end)])
+ylim([0 0.5])
 title('Collerator vs. simple Rx')
 hold on
 
@@ -99,11 +98,4 @@ function rec_bit_seq = collerator_receiver(rec_sample_seq,m,s1,s2,T)
     
     v_th = mean(rec_bit_seq);
     rec_bit_seq = rec_bit_seq > v_th;
-%     for i = 1:number_bits
-%         if rec_sample_seq(i) >= v_th
-%             rec_bit_seq(i) = 1;
-%         else
-%             rec_bit_seq(i) = 0;
-%         end 
-%     end
 end
