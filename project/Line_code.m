@@ -19,7 +19,7 @@ num_samples = length(bits) * redundancy;
 time = linspace(0, pulse_duration * length(bits), num_samples); 
 
 % Sampling time
-Ts = length(time) / num_samples ; 
+Ts = 1 / redundancy ; 
 
 % Plot the random generated bit sequence
 % Generate the voltage vector like abrupt changes
