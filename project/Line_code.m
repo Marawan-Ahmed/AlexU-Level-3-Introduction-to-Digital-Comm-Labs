@@ -1,7 +1,7 @@
 %% Setup
 
 % Generate random bits
-num_bits = 1000;
+num_bits = 10;
 
 % Set the pulse duration
 pulse_duration = 1;  % Duration of each pulse in seconds
@@ -19,7 +19,7 @@ num_samples = length(bits) * redundancy;
 time = linspace(0, pulse_duration * length(bits), num_samples); 
 
 % Sampling time
-Ts = 1 / redundancy ; 
+Ts = 1 / redundancy ; % As n bits repesent n seconds
 
 % Plot the random generated bit sequence
 % Generate the voltage vector like abrupt changes
@@ -28,22 +28,21 @@ bits_volt = repelem(bits, redundancy);
 % A: is the input array to be repeated
 % B: is the number of times each element in A should be repeated.
 
-%figure;
-%plot(time, bits_volt);
-%xlabel('Time');
-%ylabel('Voltage');
-%title('The random generated bit sequence');
-%ylim([-0.5, 1.5]);  % Set y-axis limits to show only 0 and 1 values
-
-%saveas(gcf, 'input_bits.png');
+figure;
+plot(time, bits_volt);
+xlabel('Time');
+ylabel('Voltage');
+title('The random generated bit sequence');
+ylim([-0.5, 1.5]);  % Set y-axis limits to show only 0 and 1 values
+saveas(gcf, 'input_bits.png');
 
 %% Line codes Modulation
 
 % Modulate the bits using different line codes
-waveform_nrz = nrz_modulation(bits);
-waveform_nrzi = nrzi_modulation(bits);
-waveform_rz = rz_modulation(bits);
-waveform_ami = ami_modulation(bits);
+waveform_nrz = nrz_modulation(bits);    %polar
+waveform_nrzi = nrzi_modulation(bits);  %polar
+waveform_rz = rz_modulation(bits);      %polar RZ
+waveform_ami = ami_modulation(bits);    %Bipolar NRZ
 waveform_manchester = manchester_modulation(bits);
 waveform_mlt3 = mlt3_modulation(bits);
  %
@@ -87,6 +86,29 @@ xlabel('Time');
 saveas(gcf, 'Modulations.png');
  %}
 %% Calculate power spectral density
+
+%{
+About periodogram()
+
+periodogram is a non-parametric function that calculates the PSD directly 
+from the samples of the signal. 
+As input signal is divided into overlapping segments (based on the window) 
+and for each segment FFT is applied to obtain the spectrum of the segment 
+then we square magnitude of the spectrum to obtain the power spectrum for 
+each segment.
+all segments are averaged together to obtain an estimate of the PSD.
+
+takes 5 parameters:
+1-waveform to estimate its PSD
+2-The window taken for each segment to apply fft on it (default is rect)
+3-Number of FFT points (the default value is the next power of 2 greater
+  than the length of the input signal.)
+4- Sampling frequency 
+5- center the output (optional)
+
+returns the power and frequency vectors
+%}
+
 [P_nrz, f_nrz] = periodogram(waveform_nrz,[],[],1/Ts,'centered');
 [P_nrzi, f_nrzi] = periodogram(waveform_nrzi,[],[],1/Ts,'centered');
 [P_rz, f_rz] = periodogram(waveform_rz,[],[],1/Ts,'centered');
@@ -109,7 +131,7 @@ subplot(6,1,3);
 plot(f_rz,10*log10(P_rz)); 
 title('Return to zero');
 
-ylabel('Power spectral density (dB/Hz)');
+ylabel('Power (dB)');
 
 subplot(6,1,4); 
 plot(f_ami,10*log10(P_ami)); 
@@ -160,7 +182,7 @@ function waveform = rz_modulation(bits)
     end
 end
 
-% Function for Alternative Mark Inversion (AMI) modulation
+% Function for Alternative Mark Inversion (AMI) modulation (Bipolar NRZ)
 function waveform = ami_modulation(bits)
     waveform = zeros(size(bits));
     last_polarity = 0;
