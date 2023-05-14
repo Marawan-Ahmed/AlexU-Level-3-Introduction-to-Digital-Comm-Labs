@@ -34,7 +34,7 @@ xlabel('Time');
 ylabel('Voltage');
 title('The random generated bit sequence');
 ylim([-0.5, 1.5]);  % Set y-axis limits to show only 0 and 1 values
-saveas(gcf, 'input_bits.png');
+%saveas(gcf, 'input_bits.png');
 
 %% Line codes Modulation
 
@@ -83,7 +83,7 @@ title('MLT-3 Modulation');
 
 xlabel('Time');
 
-saveas(gcf, 'Modulations.png');
+%saveas(gcf, 'Modulations.png');
  %}
 %% Calculate power spectral density
 
@@ -147,7 +147,7 @@ title('Multi-level transmission3');
 
 xlabel('Frequency (Hz)');
 
-saveas(gcf, 'PSD.png');
+%saveas(gcf, 'PSD.png');
 
 %% Functions
 % Function to generate random bits
